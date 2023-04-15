@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="style.css" />
+    <title>Converter</title>
+  </head>
+  <body>
+    <div id="app">
+      <main>
+        <div>
+          <h3>To</h3>
+          <select id="beforeConvert" v-model="measure.measureToConvert">
+            <option value="km">km</option>
+            <option value="hm">hm</option>
+            <option value="dam">dam</option>
+            <option value="m">m</option>
+            <option value="dm">dm</option>
+            <option value="cm">cm</option>
+            <option value="mm">mm</option>
+          </select>
+          <input type="number" id="number" v-model="number" />
+        </div>
+        <button id="buttonConvert" @click="convertMeasure">Convert</button>
+        <div>
+          <h3>From</h3>
+          <select id="afterConvert" v-model="measure.convertedMeasure">
+            <option value=""></option>
+            <option value="km">km</option>
+            <option value="hm">hm</option>
+            <option value="dam">dam</option>
+            <option value="m">m</option>
+            <option value="dm">dm</option>
+            <option value="cm">cm</option>
+            <option value="mm">mm</option>
+          </select>
+          <input
+            type="number"
+            id="numberConverted"
+            v-model="numberConverted"
+            readonly
+            disabled
+          />
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const { createApp } = Vue;
+
+      createApp({
+        data() {
+          return {
+            measure: {
+              measureToConvert: "",
+              convertedMeasure: "",
+            },
+            number: 0,
+            numberConverted: 0,
+          };
+        },
+
+        methods: {
+          convertMeasure() {
+            this.measure.convertedMeasure
+              ? this.calculate(
+                  this.measure.measureToConvert,
+                  this.number,
+                  this.measure.convertedMeasure
+                )
+              : alert("From is empty!");
+          },
+
+          calculate(measureToConvert, number, convertedMeasure) {
+            const units = ["km", "hm", "dam", "m", "dm", "cm", "mm"];
+            const x = units.indexOf(measureToConvert);
+            const y = units.indexOf(convertedMeasure);
+
+            const calc =
+              x > y
+                ? number / Math.pow(10, x - y)
+                : number * Math.pow(10, y - x);
+
+            this.numberConverted = calc;
+          },
+        },
+      }).mount("#app");
+    </script>
+  </body>
+</html>
